@@ -9,8 +9,16 @@ class RealDataSeeder extends Seeder
 {
     public function run(): void
     {
-        $sql = file_get_contents(database_path('seeders/export_data.sql'));
-        DB::unprepared($sql);
+        $sql   = file_get_contents(database_path('seeders/export_data.sql'));
+        $lines = explode(";\n", $sql);
+
+        foreach ($lines as $line) {
+            $line = trim($line);
+            if (!empty($line)) {
+                DB::unprepared($line . ';');
+            }
+        }
+
         $this->command->info('✅ Données réelles importées depuis export_data.sql');
     }
 }
