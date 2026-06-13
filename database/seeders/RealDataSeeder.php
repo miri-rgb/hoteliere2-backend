@@ -14,8 +14,8 @@ class RealDataSeeder extends Seeder
 
         foreach ($lines as $line) {
             $line = trim($line);
-            if (!empty($line)) {
-                DB::unprepared($line . ';');
+            if (!empty($line) && !str_starts_with($line, 'SET')) {
+                DB::statement($line);
             }
         }
 
