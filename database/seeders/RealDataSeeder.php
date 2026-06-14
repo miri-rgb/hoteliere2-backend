@@ -9,7 +9,10 @@ class RealDataSeeder extends Seeder
 {
     public function run(): void
     {
-        $sql   = file_get_contents(database_path('seeders/export_data.sql'));
+        $sql = file_get_contents(database_path('seeders/export_data.sql'));
+        if (str_starts_with($sql, "\xEF\xBB\xBF")) {
+            $sql = substr($sql, 3);
+        }
         $lines = explode(";\n", $sql);
 
         foreach ($lines as $line) {
