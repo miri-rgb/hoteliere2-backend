@@ -11,9 +11,9 @@ use Illuminate\Support\Facades\Log;
 class ChatbotService
 {
     private const MOTS_CLES_AVIS = [
-        'avis', 'expérience', 'experience',
-        'séjour', 'sejour', 'étoiles', 'etoiles',
-        'note', 'commentaire',
+        'laisser un avis', 'publier un avis', 'donner un avis',
+        'mon avis', 'mon expérience', 'mon experience',
+        'mon séjour', 'mon sejour', 'commentaire',
     ];
 
     private Client $http;
@@ -109,12 +109,10 @@ Retourne UNIQUEMENT ce JSON strict, sans texte autour :
 
         $note = max(1, min(5, (int) $parsed['note']));
 
-        Avis::create([
-            'user_id'     => $user?->id,
-            'hotel_id'    => $hotel->id,
-            'note'        => $note,
-            'commentaire' => $parsed['commentaire'],
-        ]);
+        Avis::updateOrCreate(
+            ['user_id' => $user?->id, 'hotel_id' => $hotel->id],
+            ['note'    => $note,      'commentaire' => $parsed['commentaire']]
+        );
 
         Log::info("Avis chatbot publié : user={$user?->id} hotel={$hotel->id} note={$note}");
 
@@ -138,8 +136,8 @@ Retourne UNIQUEMENT ce JSON strict, sans texte autour :
                 'id'           => $hotel->id,
                 'nom'          => $hotel->nom,
                 'ville'        => $hotel->ville,
-                'etoiles'      => $hotel->etoiles,
-                'description'  => $hotel->description,
+                'categorie'    => $hotel->categorie,
+                'description'  => $hotel->description_detaillee,
                 'prix_min'     => $hotel->typesChambre->min('prix_base'),
                 'prix_max'     => $hotel->typesChambre->max('prix_base'),
                 'services'     => $hotel->services->pluck('nom'),
