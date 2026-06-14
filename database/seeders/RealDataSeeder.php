@@ -14,9 +14,9 @@ class RealDataSeeder extends Seeder
 
         foreach ($lines as $line) {
             $line = trim($line);
-            if (!empty($line) && !str_starts_with($line, 'SET')) {
-                DB::statement($line);
-            }
+            if (empty($line)) continue;
+            if (stripos($line, 'SET ') === 0) continue;
+            DB::statement($line);
         }
 
         $this->command->info('✅ Données réelles importées depuis export_data.sql');
