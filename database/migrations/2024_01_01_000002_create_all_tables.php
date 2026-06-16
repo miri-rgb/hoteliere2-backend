@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('ville');
             $table->string('code_postal')->nullable();
             $table->text('description_detaillee')->nullable();
-            $table->string('image_url')->nullable()->after('description_detaillee');
+            $table->string('image_url')->nullable();
             $table->string('categorie');
             $table->boolean('is_active')->default(true);
             $table->timestamps();
