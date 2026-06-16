@@ -29,10 +29,9 @@ class ChambreController extends Controller
         $arrivee = $request->date_arrivee;
         $depart  = $request->date_depart;
 
-        // CORRECTION : is_active au lieu de is_available
         $chambres = Chambre::with('typeChambre')
             ->where('hotel_id', $hotelId)
-            ->where('is_active', true)
+            ->where('is_available', true)
             ->get();
 
         $result = [];
@@ -42,12 +41,10 @@ class ChambreController extends Controller
                 $result[] = [
                     'id'          => $c->id,
                     'hotel_id'    => $c->hotel_id,
-                    'numero'      => $c->numero,
-                    'etage'       => $c->etage,
-                    'type'        => $typeChambre ? $typeChambre->nom : 'Standard',
+                    'type'        => $typeChambre ? $typeChambre->nom_type : 'Standard',
                     'prix_nuit'   => $typeChambre ? $typeChambre->prix_base : 0,
-                    'capacite'    => $typeChambre ? $typeChambre->capacite : 2,
                     'description' => $c->description,
+                    'image_url'   => $c->image_url,
                 ];
             }
         }
@@ -73,10 +70,9 @@ class ChambreController extends Controller
             ], 404);
         }
 
-        // CORRECTION : is_active au lieu de is_available
         $chambres = Chambre::with('typeChambre')
             ->where('hotel_id', $hotelId)
-            ->where('is_active', true)
+            ->where('is_available', true)
             ->get();
 
         return response()->json([
@@ -118,10 +114,9 @@ class ChambreController extends Controller
         $validated = $request->validate([
             'hotel_id'        => 'required|integer|exists:hotels,id',
             'type_chambre_id' => 'required|integer|exists:types_chambre,id',
-            'numero'          => 'required|string|max:20',
-            'etage'           => 'required|integer|min:0',
             'description'     => 'nullable|string',
-            'is_active'       => 'nullable|boolean',
+            'image_url'       => 'nullable|string|url',
+            'is_available'    => 'nullable|boolean',
         ]);
 
         $chambre = Chambre::create($validated);
@@ -151,10 +146,9 @@ class ChambreController extends Controller
         $validated = $request->validate([
             'hotel_id'        => 'sometimes|integer|exists:hotels,id',
             'type_chambre_id' => 'sometimes|integer|exists:types_chambre,id',
-            'numero'          => 'sometimes|string|max:20',
-            'etage'           => 'sometimes|integer|min:0',
             'description'     => 'nullable|string',
-            'is_active'       => 'nullable|boolean',
+            'image_url'       => 'nullable|string|url',
+            'is_available'    => 'nullable|boolean',
         ]);
 
         $chambre->update($validated);

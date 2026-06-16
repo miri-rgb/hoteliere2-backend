@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Chambre extends Model
 {
     protected $fillable = [
-        'hotel_id', 'type_chambre_id', 'numero','etage','is_active', 'description', 'image_url', 'is_available'
+        'hotel_id', 'type_chambre_id', 'description', 'image_url', 'is_available',
     ];
 
     protected $casts = ['is_available' => 'boolean'];
